@@ -28,8 +28,9 @@ def root():
     return "OK"
 
 
-@app.route('/new_event', methods=['POST'])
-def new_event():
+@app.route('/new_event', defaults=dict(channel=''), methods=['POST'])
+@app.route('/<channel>/new_event', methods=['POST'])
+def new_event(channel):
     """
     GitLab event handler, handles POST events from a GitLab project
     """
@@ -43,7 +44,7 @@ def new_event():
 
         if event.should_report_event(app.config['REPORT_EVENTS']):
             text = event.format()
-            post_text(text)
+            post_text(channel, text)
     except Exception:
         import traceback
         traceback.print_exc()
@@ -51,7 +52,8 @@ def new_event():
     return 'OK'
 
 
-@app.route('/new_ci_event', methods=['POST'])
+@app.route('/new_ci_event', defaults=dict(channel=''), methods=['POST'])
+@app.route('/<channel>/new_ci_event', methods=['POST'])
 def new_ci_event():
     """
     GitLab event handler, handles POST events from a GitLab CI project
@@ -66,7 +68,7 @@ def new_ci_event():
 
         if event.should_report_event(app.config['REPORT_EVENTS']):
             text = event.format()
-            post_text(text)
+            post_text(channel, text)
     except Exception:
         import traceback
         traceback.print_exc()
@@ -74,7 +76,7 @@ def new_ci_event():
     return 'OK'
 
 
-def post_text(text):
+def post_text(channel, text):
     """
     Mattermost POST method, posts text to the Mattermost incoming webhook URL
     """
@@ -85,7 +87,9 @@ def post_text(text):
         data['username'] = app.config['USERNAME']
     if app.config['ICON_URL']:
         data['icon_url'] = app.config['ICON_URL']
-    if app.config['CHANNEL']:
+    if channel:
+        data['channel'] = channel
+    elif app.config['CHANNEL']:
         data['channel'] = app.config['CHANNEL']
 
     headers = {'Content-Type': 'application/json'}
