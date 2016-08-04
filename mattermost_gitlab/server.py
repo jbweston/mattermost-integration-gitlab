@@ -54,7 +54,7 @@ def new_event(channel):
 
 @app.route('/new_ci_event', defaults=dict(channel=''), methods=['POST'])
 @app.route('/<channel>/new_ci_event', methods=['POST'])
-def new_ci_event():
+def new_ci_event(channel):
     """
     GitLab event handler, handles POST events from a GitLab CI project
     """
