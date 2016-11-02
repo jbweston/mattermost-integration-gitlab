@@ -1,0 +1,3 @@
+{%- from 'macros.j2' import format_repo with context -%}
+
+{{user_name | escape_username}} pushed tag `{{ref}}` to the project {{format_repo(repository)}}.

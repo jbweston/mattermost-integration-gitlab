@@ -1,0 +1,3 @@
+{%- set pipeline = object_kind -%}
+
+{%- if pipeline.status | lower == 'success' -%} :white_check_mark: {% else -%} :x: {% endif -%} {{pipeline.status | title}} for the project [{{project.name}}]({{project.web_url}}) on commit [{{commit.id}}]({{commit.url}})

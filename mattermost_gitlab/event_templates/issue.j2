@@ -1,0 +1,7 @@
+{%- from 'macros.j2' import format_user, format_repo, actioned with context -%}
+{%- set issue = object_attributes -%}
+
+#### [{{issue.title}}]({{issue.url}})
+*[Issue #{{issue.iid}}]({{issue.url}}) {{actioned()}} by {{format_user(user.username)}} in {{format_repo(repository)}} on [{{issue.created_at}}]({{issue.url}})*
+
+{{description | escape_mentions | markdown_quote}}

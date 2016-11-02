@@ -32,7 +32,7 @@ def root():
 @app.route('/<channel>/new_event', methods=['POST'])
 def new_event(channel):
     """
-    GitLab event handler, handles POST events from a GitLab project
+    GitLab event handler, handles POST events from a GitLab project or Gitlab CI
     """
 
     if request.json is None:
@@ -41,30 +41,6 @@ def new_event(channel):
 
     try:
         event = event_formatter.as_event(request.json)
-
-        if event.should_report_event(app.config['REPORT_EVENTS']):
-            text = event.format()
-            post_text(channel, text)
-    except Exception:
-        import traceback
-        traceback.print_exc()
-
-    return 'OK'
-
-
-@app.route('/new_ci_event', defaults=dict(channel=''), methods=['POST'])
-@app.route('/<channel>/new_ci_event', methods=['POST'])
-def new_ci_event(channel):
-    """
-    GitLab event handler, handles POST events from a GitLab CI project
-    """
-
-    if request.json is None:
-        print('Invalid Content-Type')
-        return 'Content-Type must be application/json and the request body must contain valid JSON', 400
-
-    try:
-        event = event_formatter.CIEvent(request.json)
 
         if event.should_report_event(app.config['REPORT_EVENTS']):
             text = event.format()

@@ -1,0 +1,24 @@
+{# Macros for use in the event templates
+
+   Note that templates should import these macros `with context`
+   in order for them to work correctly
+#}
+
+{# format a gitlab user as a link #}
+{% macro format_user(username) -%}
+[{{username | escape_username}}]({{repository | gitlab_url_from_repo | gitlab_user_url(username)}})
+{%- endmacro %}
+
+{% macro format_repo(repo) -%}
+    [{{repo.name}}]({{repo.homepage}})
+{%- endmacro %}
+
+{# format the action in `object_attributes.action`.
+   this is controlled by the global variable `available_actions`
+#}
+{% macro actioned() -%}
+    {%- if object_attributes.action not in available_actions %}
+        {{ raise('Action '~object_attributes~' not available') }}
+    {% endif -%}
+    {{available_actions[object_attributes.action]}}
+{%- endmacro %}

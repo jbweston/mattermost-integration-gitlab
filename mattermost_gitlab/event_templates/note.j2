@@ -1,0 +1,33 @@
+{%- from 'macros.j2' import format_user, format_repo with context -%}
+{%- set note = object_attributes -%}
+{%- set note_type = note.noteable_type -%}
+
+{% set subtitle -%}
+[
+    {%- if note_type | lower == 'mergerequest' -%}
+        !{{merge_request.iid}} - {{merge_request.title}}
+    {%- elif note_type | lower == 'snippet' -%}
+        ${{snippet.iid}} - {{snippet.title}}
+    {%- elif note_type | lower == 'issue' -%}
+        #{{issue.iid}} - {{issue.title}}
+    {%- elif note_type | lower == 'commit' -%}
+        {{commit.id}}
+    {%- else -%}
+        {{raise('Invalid comment type ' ~ note_type)}}
+    {%- endif -%}
+]({{note.url}})
+{%- endset %}
+
+{% set type_grammar -%}
+    {#- *an* issue, but *a* commit, MR, etc.. -#}
+    {%- if note_type | lower == 'issue' -%}
+        an
+    {%- else -%}
+        a
+    {%- endif -%}
+{%- endset %}
+
+#### **New Comment** on {{subtitle}}
+*{{format_user(user.username)}} commented on {{type_grammar}} {{note_type}} in {{format_repo(repository)}} on [{{note.created_at}}]({{note.url}})*
+
+{{note.note | escape_mentions | markdown_quote}}
