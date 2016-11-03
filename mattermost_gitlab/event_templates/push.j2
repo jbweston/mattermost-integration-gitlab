@@ -1,0 +1,12 @@
+{%- from 'macros.j2' import format_repo with context -%}
+{%- set commit_text -%}
+    {%- if before == '0' * 40 -%}
+        the first commit
+    {%- elif total_commits_count > 1 -%}
+        {{total_commits_count}} commits
+    {%- else -%}
+        1 commit
+    {%- endif -%}
+{%- endset -%}
+
+{{user_name | escape_username}} pushed {{commit_text}} into the `{{ref}}` branch for project {{format_repo(repository)}}.

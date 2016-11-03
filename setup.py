@@ -14,9 +14,12 @@ setuptools.setup(
 
     packages=setuptools.find_packages(),
 
+    package_data={'mattermost_gitlab': ['event_templates/*.j2']},
+
     install_requires=[
         "Flask==0.10.1",
         "requests==2.8.1",
+        "Jinja2==2.8",
         "six",
     ],
 

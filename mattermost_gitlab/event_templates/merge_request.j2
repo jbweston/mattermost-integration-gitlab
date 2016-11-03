@@ -1,0 +1,8 @@
+{%- from 'macros.j2' import format_user, actioned with context -%}
+{%- set merge_request = object_attributes -%}
+
+#### [!{{merge_request.iid}} - {{merge_request.title}}]({{merge_request.url}})
+*{{format_user(user.username)}} {{actioned()}} merge request in [{{merge_request.target.name}}]({{merge_request.target.web_url}}) on [{{merge_request.created_at}}]({{merge_request.url}})*
+{% if merge_request.action == 'open' -%}
+    {{merge_request.description | escape_mentions | markdown_quote}}
+{%- endif %}
